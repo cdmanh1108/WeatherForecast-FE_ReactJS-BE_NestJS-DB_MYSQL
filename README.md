@@ -45,14 +45,7 @@ Website dự báo thời tiết gồm 2 phần:
 
 ## 2) ERD (Database Diagram)
 
-- Thư mục chứa ảnh ERD: `docs/erd/`
-- File ảnh đề xuất: `docs/erd/weather-forecast-erd.png`
-
-Khi đã có ảnh ERD, thêm vào markdown:
-
-```md
-![Weather Forecast ERD](./docs/erd/weather-forecast-erd.png)
-```
+![Weather Forecast ERD](https://res.cloudinary.com/mysocialmediaweb/image/upload/v1777485998/weatherforecast_user_avatar/vnb5uoy2zcjxbsve0nht.png)
 
 ## 3) Chức năng chính
 
