@@ -13,8 +13,15 @@ export class JwtRefreshStrategy extends PassportStrategy(
 ) {
   constructor(private config: ConfigService) {
     super({
-      jwtFromRequest: (req: Request) => {
-        if (req.cookies) return req.cookies['refresh_token'];
+      jwtFromRequest: (req: Request): string | null => {
+        if (
+          typeof req.cookies === 'object' &&
+          req.cookies !== null &&
+          'refresh_token' in req.cookies &&
+          typeof req.cookies['refresh_token'] === 'string'
+        ) {
+          return req.cookies['refresh_token'];
+        }
         return null;
       },
       ignoreExpiration: false,

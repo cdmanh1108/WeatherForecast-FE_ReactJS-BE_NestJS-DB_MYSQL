@@ -3,11 +3,11 @@ import { DailyForecastResponse } from 'src/weather/daily-forecast/dto/response/d
 import { HistoryWeatherResponse } from 'src/weather/history-weather/dto/response/history-weather.response';
 import { HourlyForecastResponse } from 'src/weather/hourly-forecast/dto/response/hourly-forecast-weather.response';
 
-export class WeatherFullResponse {
+export type WeatherFullResponse = {
   city: string;
   country: string;
   current: CurrentWeatherResponse;
   hourly: HourlyForecastResponse[];
   daily: DailyForecastResponse[];
   history: HistoryWeatherResponse[];
-}
+};

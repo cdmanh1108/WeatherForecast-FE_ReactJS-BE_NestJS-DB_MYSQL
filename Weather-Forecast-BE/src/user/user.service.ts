@@ -4,11 +4,15 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserRequest } from './dto/request/create-user.request';
 import { BadRequestException } from '@nestjs/common';
-import { hashPassword } from 'src/utils/hash.util';
-import { UserProfileResponse } from './dto/response/user-profile.response';
+import { hashPassword } from 'src/common/utils/hash.util';
+import {
+  mapUserToUserProfileResponse,
+  UserProfileResponse,
+} from './dto/response/user-profile.response';
 import { CloudinaryService } from 'src/services/cloudinary/cloudinary.service';
 import { OpenWeatherService } from 'src/services/openweather/openweather.service';
 import { CityService } from 'src/city/city.service';
+import { UploadedFileType } from 'src/common/types/uploaded-file.type';
 
 @Injectable()
 export class UserService {
@@ -43,51 +47,53 @@ export class UserService {
     });
   }
 
-  async getUserById(userId: number): Promise<UserProfileResponse | null> {
+  async getUserById(userId: number): Promise<UserProfileResponse> {
     const user = await this.userRepo.findOne({
       where: { userId },
       relations: ['currentCity'],
     });
     if (!user) throw new BadRequestException('User not found');
-    return UserProfileResponse.fromEntity(user);
+    return mapUserToUserProfileResponse(user);
   }
 
   async updateUserAvatar(
     userId: number,
-    fileAvatar: Express.Multer.File
-  ): Promise<UserProfileResponse | null> {
+    fileAvatar: UploadedFileType
+  ): Promise<UserProfileResponse> {
     const user = await this.userRepo.findOne({
       where: { userId },
     });
     if (!user) throw new BadRequestException('User not found');
     if (!fileAvatar) throw new BadRequestException('Missing file avatar');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+
     const result = await this.cloudinaryService.uploadStream(fileAvatar.buffer);
     if (!result.secure_url)
       throw new BadRequestException('Error when upload avatar');
     user.avatar = result.secure_url;
     await this.userRepo.save(user);
-    return UserProfileResponse.fromEntity(user);
+    const updatedUser = await this.findOneByIdWithCurrentCity(userId);
+    return mapUserToUserProfileResponse(updatedUser);
   }
 
   async updateUserFullname(
     userId: number,
     fullname: string
-  ): Promise<UserProfileResponse | null> {
+  ): Promise<UserProfileResponse> {
     const user = await this.userRepo.findOne({
       where: { userId },
     });
     if (!user) throw new BadRequestException('User not found');
     user.fullname = fullname;
     await this.userRepo.save(user);
-    return UserProfileResponse.fromEntity(user);
+    const updatedUser = await this.findOneByIdWithCurrentCity(userId);
+    return mapUserToUserProfileResponse(updatedUser);
   }
 
   async updateUserCurrentCityByCoordinates(
     userId: number,
     latitude: number,
     longitude: number
-  ): Promise<UserProfileResponse | null> {
+  ): Promise<UserProfileResponse> {
     const user = await this.userRepo.findOne({
       where: { userId },
     });
@@ -98,12 +104,15 @@ export class UserService {
       longitude
     );
     const topLocation = locations[0];
+    if (!topLocation) {
+      throw new BadRequestException('Cannot detect city from coordinates');
+    }
 
     const city = await this.cityService.findBestCityFromCoordinates(
       latitude,
       longitude,
-      topLocation?.name,
-      topLocation?.country
+      topLocation.name,
+      topLocation.country
     );
 
     user.current_city_fk = city.city_id;
@@ -113,8 +122,20 @@ export class UserService {
       where: { userId },
       relations: ['currentCity'],
     });
-    if (!updatedUser) throw new BadRequestException('User not found');
+    if (!updatedUser) {
+      throw new BadRequestException('User not found');
+    }
+    return mapUserToUserProfileResponse(updatedUser);
+  }
 
-    return UserProfileResponse.fromEntity(updatedUser);
+  private async findOneByIdWithCurrentCity(userId: number): Promise<User> {
+    const user = await this.userRepo.findOne({
+      where: { userId },
+      relations: ['currentCity'],
+    });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    return user;
   }
 }

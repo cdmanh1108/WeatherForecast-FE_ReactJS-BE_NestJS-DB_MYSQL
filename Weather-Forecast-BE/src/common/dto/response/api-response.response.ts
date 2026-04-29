@@ -20,7 +20,7 @@ export class ApiResponse<T> {
     return new ApiResponse<T>(statusCode, message, result);
   }
 
-  static error<T>(message: string, statusCode: number, errorCode?: number) {
+  static error(message: string, statusCode: number, errorCode?: number) {
     return new ApiResponse<null>(statusCode, message, null, errorCode);
   }
 }

@@ -25,15 +25,30 @@ export class OpenWeatherHistoryService {
 
     try {
       return await this.httpService.axiosRef.get<T>(url, { params });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(
         'OpenWeather History API error:',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        error?.response?.data || error.message || error
+        this.getErrorDetail(error)
       );
       throw new InternalServerErrorException(
         'Failed to fetch data from OpenWeather History API'
       );
     }
+  }
+
+  private getErrorDetail(error: unknown): unknown {
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    if (typeof error === 'object' && error !== null && 'response' in error) {
+      const response = (error as { response?: { data?: unknown } | null })
+        .response;
+      if (response && 'data' in response) {
+        return response.data;
+      }
+    }
+
+    return error;
   }
 }

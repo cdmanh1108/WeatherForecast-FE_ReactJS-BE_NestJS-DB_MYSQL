@@ -1,6 +1,6 @@
 import { User } from '../../user.entity';
 
-export class UserProfileResponse {
+export type UserProfileResponse = {
   userId: number;
   fullName: string;
   userName: string;
@@ -11,19 +11,24 @@ export class UserProfileResponse {
   language: string;
   measurementType: string;
   timezone: string;
+};
 
-  static fromEntity(user: User): UserProfileResponse {
-    const dto = new UserProfileResponse();
-    dto.userId = user.userId;
-    dto.userName = user.username;
-    dto.fullName = user.fullname || '';
-    dto.email = user.email;
-    dto.avatar = user.avatar || '';
-    dto.currentCityId = user.current_city_fk ?? null;
-    dto.currentCity = user.currentCity?.city_name || '';
-    dto.language = user.nd_language;
-    dto.measurementType = user.measurement_type;
-    dto.timezone = `UTC${user.utc >= 0 ? '+' : ''}${user.utc ?? '00:00'}`;
-    return dto;
-  }
+export function mapUserToUserProfileResponse(user: User): UserProfileResponse {
+  const timezone =
+    user.utc === null
+      ? 'UTC+00:00'
+      : `UTC${user.utc >= 0 ? '+' : ''}${user.utc}`;
+
+  return {
+    userId: user.userId,
+    userName: user.username,
+    fullName: user.fullname === null ? '' : user.fullname,
+    email: user.email,
+    avatar: user.avatar === null ? '' : user.avatar,
+    currentCityId: user.current_city_fk,
+    currentCity: user.currentCity === null ? '' : user.currentCity.city_name,
+    language: user.nd_language,
+    measurementType: user.measurement_type,
+    timezone,
+  };
 }

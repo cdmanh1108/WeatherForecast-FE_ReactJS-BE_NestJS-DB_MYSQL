@@ -10,8 +10,7 @@ import openweatherConfig from 'src/config/openweather.config';
 
 @Injectable()
 export class OpenWeatherService {
-  private readonly weatherBaseUrl =
-    'https://api.openweathermap.org/data/2.5';
+  private readonly weatherBaseUrl = 'https://api.openweathermap.org/data/2.5';
   private readonly geocodingBaseUrl = 'https://api.openweathermap.org/geo/1.0';
 
   constructor(
@@ -30,11 +29,8 @@ export class OpenWeatherService {
 
     try {
       return await this.httpService.axiosRef.get<T>(url, { params });
-    } catch (error) {
-      console.error(
-        'OpenWeather API error:',
-        error?.response?.data || error.message || error
-      );
+    } catch (error: unknown) {
+      console.error('OpenWeather API error:', this.getErrorDetail(error));
       throw new InternalServerErrorException(
         'Failed to fetch data from OpenWeather API'
       );
@@ -50,10 +46,10 @@ export class OpenWeatherService {
 
     try {
       return await this.httpService.axiosRef.get<T>(url, { params });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(
         'OpenWeather Geocoding API error:',
-        error?.response?.data || error.message || error
+        this.getErrorDetail(error)
       );
       throw new InternalServerErrorException(
         'Failed to fetch data from OpenWeather Geocoding API'
@@ -89,5 +85,21 @@ export class OpenWeatherService {
     });
 
     return response.data;
+  }
+
+  private getErrorDetail(error: unknown): unknown {
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    if (typeof error === 'object' && error !== null && 'response' in error) {
+      const response = (error as { response?: { data?: unknown } | null })
+        .response;
+      if (response && 'data' in response) {
+        return response.data;
+      }
+    }
+
+    return error;
   }
 }

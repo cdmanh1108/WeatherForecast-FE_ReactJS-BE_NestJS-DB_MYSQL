@@ -1,4 +1,4 @@
-export class CurrentWeatherResponse {
+export type CurrentWeatherResponse = {
   cityName: string;
   temperature: number;
   feels_like: number;
@@ -12,4 +12,4 @@ export class CurrentWeatherResponse {
   icon: string;
   weather_description: string;
   cur_timestamp: number;
-}
+};

@@ -1,6 +1,6 @@
 // src/dtos/history-weather-response.ts
 
-export class HistoryWeatherResponse {
+export type HistoryWeatherResponse = {
   hw_timestamp: number;
   temperature: number;
   temperature_min: number;
@@ -12,4 +12,4 @@ export class HistoryWeatherResponse {
   clouds: number;
   weather_description: string;
   icon: string;
-}
+};

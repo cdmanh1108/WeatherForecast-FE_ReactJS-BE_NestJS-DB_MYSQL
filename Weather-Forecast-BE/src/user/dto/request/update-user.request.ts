@@ -1,34 +1,22 @@
 import {
-  IsOptional,
-  IsString,
-  IsNumber,
-  MinLength,
   IsLatitude,
   IsLongitude,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
 } from 'class-validator';
 
 export class UpdateUserFullnameRequest {
   @IsOptional()
   @IsString()
-  fullname: string;
-}
-
-export class UpdateUserCurrentCityRequest {
-  @IsOptional()
-  @IsNumber()
-  current_city_fk: number;
-}
-
-export class UpdateUserPasswordRequest {
-  @IsString()
-  @MinLength(6)
-  password: string;
+  @IsNotEmpty()
+  fullname?: string;
 }
 
 export class UpdateUserLocationRequest {
   @IsLatitude()
-  latitude: number;
+  latitude!: number;
 
   @IsLongitude()
-  longitude: number;
+  longitude!: number;
 }

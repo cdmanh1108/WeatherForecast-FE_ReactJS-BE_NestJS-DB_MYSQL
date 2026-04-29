@@ -7,7 +7,7 @@ import { join } from 'path';
 import { parse } from 'csv-parse/sync';
 import { WeatherCondition } from 'src/weather-condition/weather-condition.entity';
 import { User } from 'src/user/user.entity';
-import { hashPassword } from 'src/utils/hash.util';
+import { hashPassword } from 'src/common/utils/hash.util';
 import { ConfigService } from '@nestjs/config';
 import { City } from 'src/city/city.entity';
 
@@ -22,11 +22,6 @@ interface CityCSVRow {
 interface CountryCSVRow {
   country_id: string;
   country_name: string;
-}
-
-interface UserAlertTypeCSVRow {
-  alert_type_id: string;
-  alert_description: string;
 }
 
 interface WeatherConditionCSVRow {

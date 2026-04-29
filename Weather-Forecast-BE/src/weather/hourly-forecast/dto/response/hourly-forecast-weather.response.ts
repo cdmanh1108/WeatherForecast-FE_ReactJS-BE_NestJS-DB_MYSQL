@@ -1,4 +1,4 @@
-export class HourlyForecastResponse {
+export type HourlyForecastResponse = {
   hf_timestamp: number;
   icon: string;
   temperature: number;
@@ -12,4 +12,4 @@ export class HourlyForecastResponse {
   aqi: number;
   pop: number;
   weather_description: string;
-}
+};

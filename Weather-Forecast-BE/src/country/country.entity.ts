@@ -4,11 +4,9 @@ import { City } from 'src/city/city.entity';
 @Entity('Country')
 export class Country {
   @PrimaryColumn({ length: 3 })
-  country_id: string;
-
+  declare country_id: string;
   @Column({ length: 50 })
-  country_name: string;
-
+  declare country_name: string;
   @OneToMany(() => City, (city) => city.country)
-  cities: City[];
+  declare cities: City[];
 }

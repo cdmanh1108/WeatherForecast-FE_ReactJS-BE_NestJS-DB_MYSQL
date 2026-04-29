@@ -1,4 +1,4 @@
-export class DailyForecastResponse {
+export type DailyForecastResponse = {
   df_date: number;
   icon: string;
   temperature_max: number;
@@ -18,6 +18,6 @@ export class DailyForecastResponse {
   uv: number;
   aqi: number;
   pop: number;
-  summary?: string;
+  summary: string | null;
   weather_description: string;
-}
+};

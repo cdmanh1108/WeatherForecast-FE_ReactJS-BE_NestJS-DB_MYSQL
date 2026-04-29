@@ -33,16 +33,7 @@ export class CityController {
 
   @Get(':city_id')
   async getCityById(@Param('city_id', ParseIntPipe) city_id: number) {
-    const city = await this.cityService.getCityByIdWithCountry(city_id);
-    return ApiResponse.success(
-      {
-        city_id: city.city_id,
-        city_name: city.city_name,
-        country_name: city.country?.country_name || 'Unknown',
-        latitude: city.latitude,
-        longitude: city.longitude,
-      },
-      'Get city by id successfully'
-    );
+    const result = await this.cityService.getCityDetailById(city_id);
+    return ApiResponse.success(result, 'Get city by id successfully');
   }
 }

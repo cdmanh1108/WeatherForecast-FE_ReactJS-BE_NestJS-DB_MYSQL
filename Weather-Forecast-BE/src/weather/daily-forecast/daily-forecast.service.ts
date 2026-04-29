@@ -47,8 +47,8 @@ export class DailyForecastService {
           }
         );
 
-      const entities = api.list.map(
-        (item) => mapToDailyForecastEntity(item, city_id) 
+      const entities = api.list.map((item) =>
+        mapToDailyForecastEntity(item, city_id)
       );
 
       await this.dailyForecastRepo

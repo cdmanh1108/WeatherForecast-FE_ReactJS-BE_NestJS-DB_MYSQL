@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Post,
@@ -19,6 +20,7 @@ import {
   UpdateUserFullnameRequest,
   UpdateUserLocationRequest,
 } from './dto/request/update-user.request';
+import { UploadedFileType } from 'src/common/types/uploaded-file.type';
 
 @Controller('user')
 export class UserController {
@@ -43,7 +45,7 @@ export class UserController {
   @Patch('avatar')
   async updateUserProfile(
     @Req() req: AuthRequest,
-    @UploadedFile() fileAvatar: Express.Multer.File
+    @UploadedFile() fileAvatar: UploadedFileType
   ) {
     const userId = req.user.sub;
     const result = await this.userService.updateUserAvatar(userId, fileAvatar);
@@ -57,6 +59,9 @@ export class UserController {
     @Body() dto: UpdateUserFullnameRequest
   ) {
     const userId = req.user.sub;
+    if (dto.fullname === undefined) {
+      throw new BadRequestException('fullname is required');
+    }
     const result = await this.userService.updateUserFullname(
       userId,
       dto.fullname

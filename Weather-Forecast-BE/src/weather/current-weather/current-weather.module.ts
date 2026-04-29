@@ -9,10 +9,7 @@ import { CurrentWeather } from './current-weather.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      CurrentWeather,
-      City,
-    ]),
+    TypeOrmModule.forFeature([CurrentWeather, City]),
     ServicesModule,
     CityModule,
   ],

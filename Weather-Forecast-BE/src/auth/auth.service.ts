@@ -1,13 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { comparePassword } from 'src/utils/hash.util';
+import { comparePassword } from 'src/common/utils/hash.util';
 import { ConfigService } from '@nestjs/config';
 import { ApiException, ERROR_CODES } from 'src/common/exceptions/api-exception';
+import { mapUserToUserProfileResponse } from 'src/user/dto/response/user-profile.response';
 
 @Injectable()
 export class AuthService {
@@ -36,26 +33,16 @@ export class AuthService {
     }
     const payload = { sub: user.userId, username: user.username };
     const access_token = await this.jwtService.signAsync(payload, {
-      secret: this.config.get('jwt.secret'),
+      secret: this.config.getOrThrow<string>('jwt.secret'),
     });
     const refresh_token = await this.jwtService.signAsync(payload, {
-      secret: this.config.get('jwt.refresh_secret'),
+      secret: this.config.getOrThrow<string>('jwt.refresh_secret'),
     });
+
     return {
       access_token,
       refresh_token,
-      user: {
-        userId: user.userId,
-        userName: user.username,
-        fullName: user.fullname || '',
-        email: user.email,
-        avatar: user.avatar || '',
-        currentCityId: user.current_city_fk ?? null,
-        currentCity: user.currentCity?.city_name || '',
-        language: user.nd_language,
-        measurementType: user.measurement_type,
-        timezone: `UTC${user.utc >= 0 ? '+' : ''}${user.utc ?? '00:00'}`,
-      },
+      user: mapUserToUserProfileResponse(user),
     };
   }
 
@@ -64,17 +51,6 @@ export class AuthService {
     if (!user) {
       throw new ApiException('User not found', 401, ERROR_CODES.USER_NOT_FOUND);
     }
-    return {
-      userId: user.userId,
-      userName: user.username,
-      fullName: user.fullname || '',
-      email: user.email,
-      avatar: user.avatar || '',
-      currentCityId: user.current_city_fk ?? null,
-      currentCity: user.currentCity?.city_name || '',
-      language: user.nd_language,
-      measurementType: user.measurement_type,
-      timezone: `UTC${user.utc >= 0 ? '+' : ''}${user.utc ?? '00:00'}`,
-    };
+    return mapUserToUserProfileResponse(user);
   }
 }

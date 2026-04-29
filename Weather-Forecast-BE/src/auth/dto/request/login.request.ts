@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class LoginRequest {
   @IsString()
-  username: string;
+  @IsNotEmpty()
+  username!: string;
 
   @IsString()
-  password: string;
+  @IsNotEmpty()
+  password!: string;
 }

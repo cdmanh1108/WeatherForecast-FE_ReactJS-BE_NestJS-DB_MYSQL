@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CityService } from 'src/city/city.service';
 import { CurrentWeatherService } from './current-weather/current-weather.service';
 import { DailyForecastService } from './daily-forecast/daily-forecast.service';
@@ -32,11 +32,20 @@ export class WeatherService {
 
     return {
       city: city.city_name,
-      country: city.country?.country_name || '',
+      country: this.getCountryName(city.country),
       current,
       hourly: hourly.data,
       daily,
       history,
     };
+  }
+
+  private getCountryName(
+    country: { country_name: string } | null | undefined
+  ): string {
+    if (!country) {
+      throw new NotFoundException('Country relation is missing for city');
+    }
+    return country.country_name;
   }
 }

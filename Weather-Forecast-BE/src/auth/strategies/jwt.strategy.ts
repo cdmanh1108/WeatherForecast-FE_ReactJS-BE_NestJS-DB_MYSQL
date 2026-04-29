@@ -9,8 +9,15 @@ import { JwtPayload } from '../interfaces/jwt-payload.interface';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private config: ConfigService) {
     super({
-      jwtFromRequest: (req: Request) => {
-        if (req.cookies) return req.cookies['access_token'];
+      jwtFromRequest: (req: Request): string | null => {
+        if (
+          typeof req.cookies === 'object' &&
+          req.cookies !== null &&
+          'access_token' in req.cookies &&
+          typeof req.cookies['access_token'] === 'string'
+        ) {
+          return req.cookies['access_token'];
+        }
         return null;
       },
       ignoreExpiration: false,

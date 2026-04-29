@@ -63,5 +63,4 @@ export class CurrentWeatherService {
     if (!fullWeather) throw new Error('Error when fetch current weather');
     return mapToCurrentWeatherResponse(fullWeather);
   }
-
 }

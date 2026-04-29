@@ -11,17 +11,17 @@ export function mapToHourlyForecastEntity(
   hf.weather_condition_id = item.weather[0].id;
 
   hf.hf_timestamp = item.dt;
-  hf.icon = item.weather[0]?.icon ?? '';
+  hf.icon = item.weather[0].icon;
 
-  hf.temperature = item.main.temp ?? 0;
-  hf.feels_like = item.main.feels_like ?? 0;
-  hf.pressure = item.main.pressure ?? 0;
-  hf.humidity = item.main.humidity ?? 0;
-  hf.clouds = item.clouds.all ?? 0;
+  hf.temperature = item.main.temp;
+  hf.feels_like = item.main.feels_like;
+  hf.pressure = item.main.pressure;
+  hf.humidity = item.main.humidity;
+  hf.clouds = item.clouds.all;
 
   hf.uv = 0; // Nếu cần, có thể lấy từ OneCall API
-  hf.visibility = item.visibility ?? 0;
-  hf.wind_speed = item.wind.speed ?? 0;
+  hf.visibility = item.visibility;
+  hf.wind_speed = item.wind.speed;
   hf.pop = item.pop;
   hf.aqi = 0; // Nếu cần, lấy từ air_pollution API
 

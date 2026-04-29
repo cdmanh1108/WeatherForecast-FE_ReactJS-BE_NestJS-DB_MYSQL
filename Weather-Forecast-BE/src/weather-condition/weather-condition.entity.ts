@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryColumn, OneToMany } from 'typeorm';
+import { Column, Entity, PrimaryColumn, OneToMany } from 'typeorm';
 import { CurrentWeather } from 'src/weather/current-weather/current-weather.entity';
 import { DailyForecast } from 'src/weather/daily-forecast/daily-forecast.entity';
 import { HourlyForecast } from 'src/weather/hourly-forecast/hourly-forecast.entity';
@@ -7,23 +7,17 @@ import { HistoryWeather } from 'src/weather/history-weather/history-weather.enti
 @Entity('WeatherCondition')
 export class WeatherCondition {
   @PrimaryColumn()
-  weather_condition_id: number;
-
+  declare weather_condition_id: number;
   @Column({ length: 50 })
-  main: string;
-
+  declare main: string;
   @Column({ length: 100 })
-  weather_description: string;
-
-  @OneToOne(() => CurrentWeather, (cw) => cw.weatherCondition)
-  currentWeather: CurrentWeather[];
-
+  declare weather_description: string;
+  @OneToMany(() => CurrentWeather, (cw) => cw.weatherCondition)
+  declare currentWeathers: CurrentWeather[];
   @OneToMany(() => DailyForecast, (df) => df.weatherCondition)
-  dailyForecasts: DailyForecast[];
-
+  declare dailyForecasts: DailyForecast[];
   @OneToMany(() => HourlyForecast, (hf) => hf.weatherCondition)
-  hourlyForecasts: HourlyForecast[];
-
+  declare hourlyForecasts: HourlyForecast[];
   @OneToMany(() => HistoryWeather, (hw) => hw.weatherCondition)
-  historyWeathers: HistoryWeather[];
+  declare historyWeathers: HistoryWeather[];
 }

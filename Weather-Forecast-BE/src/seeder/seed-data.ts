@@ -15,4 +15,4 @@ async function bootstrap() {
   await seeder.seederAllData();
   await appContext.close();
 }
-bootstrap();
+void bootstrap();

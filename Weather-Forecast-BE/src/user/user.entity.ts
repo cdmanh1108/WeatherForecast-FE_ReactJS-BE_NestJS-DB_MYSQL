@@ -10,45 +10,32 @@ import { City } from 'src/city/city.entity';
 @Entity('User')
 export class User {
   @PrimaryGeneratedColumn()
-  userId: number;
-
+  declare userId: number;
   @Column({ length: 25, unique: true })
-  username: string;
-
-  @Column({ length: 25, nullable: true })
-  fullname: string;
-
-  @Column({ length: 255, nullable: true })
-  avatar: string;
-
+  declare username: string;
+  @Column({ type: 'varchar', length: 25, nullable: true })
+  declare fullname: string | null;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  declare avatar: string | null;
   @Column({ length: 60 })
-  email: string;
-
+  declare email: string;
   @Column({ length: 128 })
-  password: string;
-
-  @Column({ length: 50, nullable: true })
-  verifyCode: string;
-
-  @Column({ nullable: true })
-  current_city_fk: number;
-
-  @Column({ length: 25, default: 'en' })
-  nd_language: string;
-
-  @Column({ length: 10, default: 'Metric' })
-  measurement_type: string;
-
+  declare password: string;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  declare verifyCode: string | null;
   @Column({ type: 'int', nullable: true })
-  utc: number;
-
-  @Column({ length: 50, nullable: true })
-  status: string;
-
-  @Column({ default: 'USER' })
-  role: 'USER' | 'ADMIN';
-
-  @ManyToOne(() => City)
+  declare current_city_fk: number | null;
+  @Column({ length: 25, default: 'en' })
+  declare nd_language: string;
+  @Column({ length: 10, default: 'Metric' })
+  declare measurement_type: string;
+  @Column({ type: 'int', nullable: true })
+  declare utc: number | null;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  declare status: string | null;
+  @Column({ type: 'varchar', length: 10, default: 'USER' })
+  declare role: 'USER' | 'ADMIN';
+  @ManyToOne(() => City, { nullable: true })
   @JoinColumn({ name: 'current_city_fk' })
-  currentCity: City;
+  declare currentCity: City | null;
 }

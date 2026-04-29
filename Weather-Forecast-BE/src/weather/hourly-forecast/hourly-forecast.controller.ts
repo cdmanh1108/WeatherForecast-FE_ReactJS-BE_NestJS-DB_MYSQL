@@ -1,4 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import { HourlyForecastService } from './hourly-forecast.service';
 import { ApiResponse } from 'src/common/dto/response/api-response.response';
 
@@ -8,15 +14,15 @@ export class HourlyForecastController {
 
   @Get('forecast/hourly')
   async getHourlyForecastWeatherByCityId(
-    @Query('city_id') city_id: number,
-    @Query('page') page = 1,
-    @Query('limit') limit = 12
+    @Query('city_id', ParseIntPipe) city_id: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number
   ) {
     const hourlyForcastWeathers =
       await this.hourlyForecastService.getHourlyForecastWeatherByCityId(
         city_id,
-        +page,
-        +limit
+        page,
+        limit
       );
     return ApiResponse.success(
       hourlyForcastWeathers,

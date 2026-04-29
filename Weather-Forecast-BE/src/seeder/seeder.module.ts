@@ -7,14 +7,7 @@ import { WeatherCondition } from 'src/weather-condition/weather-condition.entity
 import { User } from 'src/user/user.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      City,
-      Country,
-      WeatherCondition,
-      User,
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([City, Country, WeatherCondition, User])],
   providers: [SeederService],
   exports: [SeederService],
 })

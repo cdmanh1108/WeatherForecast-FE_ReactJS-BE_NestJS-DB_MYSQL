@@ -16,10 +16,10 @@ export function mapToCurrentWeatherEntity(
   weather.feels_like = data.main.feels_like;
   weather.pressure = data.main.pressure;
   weather.humidity = data.main.humidity;
-  weather.clouds = data.clouds?.all || 0;
+  weather.clouds = data.clouds.all;
   weather.uv = 0; // gọi API /onecall nếu cần
   weather.visibility = data.visibility;
-  weather.wind_speed = data.wind?.speed || 0;
+  weather.wind_speed = data.wind.speed;
   weather.aqi = 0; // gọi API /air_pollution nếu cần
 
   return weather;

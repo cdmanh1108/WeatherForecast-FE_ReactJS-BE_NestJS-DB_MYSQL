@@ -13,55 +13,39 @@ import { WeatherCondition } from 'src/weather-condition/weather-condition.entity
 @Index(['city_id', 'hf_timestamp'], { unique: true })
 export class HourlyForecast {
   @PrimaryGeneratedColumn()
-  hourly_forecast_id: number;
-
+  declare hourly_forecast_id: number;
   @Column()
-  city_id: number;
-
+  declare city_id: number;
   @Column()
-  weather_condition_id: number;
-
+  declare weather_condition_id: number;
   @Column('bigint')
-  hf_timestamp: number;
-
+  declare hf_timestamp: number;
   @Column({ length: 5 })
-  icon: string;
-
+  declare icon: string;
   @Column('float')
-  temperature: number;
-
+  declare temperature: number;
   @Column('float')
-  feels_like: number;
-
+  declare feels_like: number;
   @Column('int')
-  pressure: number;
-
+  declare pressure: number;
   @Column('int')
-  humidity: number;
-
+  declare humidity: number;
   @Column('int')
-  clouds: number;
-
+  declare clouds: number;
   @Column('float')
-  uv: number;
-
+  declare uv: number;
   @Column('int')
-  visibility: number;
-
+  declare visibility: number;
   @Column('float')
-  wind_speed: number;
-
+  declare wind_speed: number;
   @Column('float')
-  pop: number;
-
+  declare pop: number;
   @Column('int')
-  aqi: number;
-
+  declare aqi: number;
   @ManyToOne(() => City, (city) => city.hourlyForecasts)
   @JoinColumn({ name: 'city_id' })
-  city: City;
-
+  declare city: City;
   @ManyToOne(() => WeatherCondition, (wc) => wc.hourlyForecasts)
   @JoinColumn({ name: 'weather_condition_id' })
-  weatherCondition: WeatherCondition;
+  declare weatherCondition: WeatherCondition;
 }

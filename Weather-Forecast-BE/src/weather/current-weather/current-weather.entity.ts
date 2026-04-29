@@ -12,52 +12,52 @@ import { WeatherCondition } from 'src/weather-condition/weather-condition.entity
 @Entity('CurrentWeather')
 export class CurrentWeather {
   @PrimaryGeneratedColumn()
-  current_weather_id: number;
+  declare current_weather_id: number;
 
   @Column()
-  city_id: number;
+  declare city_id: number;
 
   @Column()
-  weather_condition_id: number;
+  declare weather_condition_id: number;
 
   @Column('bigint')
-  cur_timestamp: number;
+  declare cur_timestamp: number;
 
   @Column({ length: 5 })
-  icon: string;
+  declare icon: string;
 
   @Column('float')
-  temperature: number;
+  declare temperature: number;
 
   @Column('float')
-  feels_like: number;
+  declare feels_like: number;
 
   @Column('int')
-  pressure: number;
+  declare pressure: number;
 
   @Column('int')
-  humidity: number;
+  declare humidity: number;
 
   @Column('int')
-  clouds: number;
+  declare clouds: number;
 
   @Column('float')
-  uv: number;
+  declare uv: number;
 
   @Column('int')
-  visibility: number;
+  declare visibility: number;
 
   @Column('float')
-  wind_speed: number;
+  declare wind_speed: number;
 
   @Column('int')
-  aqi: number;
+  declare aqi: number;
 
   @OneToOne(() => City, (city) => city.currentWeather)
   @JoinColumn({ name: 'city_id' })
-  city: City;
+  declare city: City;
 
-  @ManyToOne(() => WeatherCondition, (wc) => wc.currentWeather)
+  @ManyToOne(() => WeatherCondition, (wc) => wc.currentWeathers)
   @JoinColumn({ name: 'weather_condition_id' })
-  weatherCondition: WeatherCondition;
+  declare weatherCondition: WeatherCondition;
 }

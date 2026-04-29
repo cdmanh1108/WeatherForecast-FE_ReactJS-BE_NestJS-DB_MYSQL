@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { IsString, IsEmail, MinLength, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class CreateUserRequest {
   @IsString()
-  username: string;
+  @IsNotEmpty()
+  username!: string;
 
   @IsString()
-  fullName: string;
+  @IsNotEmpty()
+  fullName!: string;
 
   @IsString()
+  @IsNotEmpty()
   @MinLength(6)
-  password: string;
+  password!: string;
 }

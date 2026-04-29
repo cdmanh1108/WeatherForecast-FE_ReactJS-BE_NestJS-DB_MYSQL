@@ -16,33 +16,24 @@ import { HistoryWeather } from 'src/weather/history-weather/history-weather.enti
 @Entity('City')
 export class City {
   @PrimaryColumn()
-  city_id: number;
-
+  declare city_id: number;
   @Column({ length: 50 })
-  city_name: string;
-
+  declare city_name: string;
   @Column({ length: 3 })
-  country_id: number;
-
+  declare country_id: string;
   @Column('float')
-  latitude: number;
-
+  declare latitude: number;
   @Column('float')
-  longitude: number;
-
-  @ManyToOne(() => Country, (country) => country.cities)
+  declare longitude: number;
+  @ManyToOne(() => Country, (country) => country.cities, { nullable: false })
   @JoinColumn({ name: 'country_id' })
-  country: Country;
-
+  declare country: Country;
   @OneToOne(() => CurrentWeather, (cw) => cw.city)
-  currentWeather: CurrentWeather[];
-
+  declare currentWeather: CurrentWeather | null;
   @OneToMany(() => DailyForecast, (df) => df.city)
-  dailyForecasts: DailyForecast[];
-
+  declare dailyForecasts: DailyForecast[];
   @OneToMany(() => HourlyForecast, (hf) => hf.city)
-  hourlyForecasts: HourlyForecast[];
-
+  declare hourlyForecasts: HourlyForecast[];
   @OneToMany(() => HistoryWeather, (hw) => hw.city)
-  historyWeathers: HistoryWeather[];
+  declare historyWeathers: HistoryWeather[];
 }

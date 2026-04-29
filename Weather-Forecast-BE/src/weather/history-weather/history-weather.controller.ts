@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, ParseIntPipe, Query } from '@nestjs/common';
 import { HistoryWeatherService } from './history-weather.service';
 import { ApiResponse } from 'src/common/dto/response/api-response.response';
 
@@ -7,7 +7,9 @@ export class HistoryWeatherController {
   constructor(private readonly historyWeatherService: HistoryWeatherService) {}
 
   @Get('history')
-  async getHistoryWeatherByCityId(@Query('city_id') city_id: number) {
+  async getHistoryWeatherByCityId(
+    @Query('city_id', ParseIntPipe) city_id: number
+  ) {
     const historyWeathers =
       await this.historyWeatherService.getHistoryWeatherByCityId(city_id);
     return ApiResponse.success(

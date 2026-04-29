@@ -2,6 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { City } from './city.entity';
 import { ILike, Repository } from 'typeorm';
+import {
+  CityDetailResponse,
+  CitySuggestionResponse,
+} from './dto/response/city.response';
 
 @Injectable()
 export class CityService {
@@ -10,17 +14,13 @@ export class CityService {
     private readonly cityRepo: Repository<City>
   ) {}
 
-  async suggestNameCities(keyword: string): Promise<object[]> {
+  async suggestNameCities(keyword: string): Promise<CitySuggestionResponse[]> {
     const cities = await this.cityRepo.find({
       where: { city_name: ILike(`%${keyword}%`) },
       take: 10,
       relations: ['country'],
     });
-    return cities.map((city) => ({
-      city_id: city.city_id,
-      city_name: city.city_name,
-      country_name: city.country?.country_name || 'Unknown',
-    }));
+    return cities.map((city) => this.toCitySuggestionResponse(city));
   }
 
   async getCityById(city_id: number): Promise<City> {
@@ -51,17 +51,15 @@ export class CityService {
   async getCityByCoordinates(
     latitude: number,
     longitude: number
-  ): Promise<object> {
+  ): Promise<CityDetailResponse> {
     const city = await this.findNearestCityByCoordinates(latitude, longitude);
     const cityWithCountry = await this.getCityByIdWithCountry(city.city_id);
+    return this.toCityDetailResponse(cityWithCountry);
+  }
 
-    return {
-      city_id: cityWithCountry.city_id,
-      city_name: cityWithCountry.city_name,
-      country_name: cityWithCountry.country?.country_name || 'Unknown',
-      latitude: cityWithCountry.latitude,
-      longitude: cityWithCountry.longitude,
-    };
+  async getCityDetailById(city_id: number): Promise<CityDetailResponse> {
+    const city = await this.getCityByIdWithCountry(city_id);
+    return this.toCityDetailResponse(city);
   }
 
   async findBestCityFromCoordinates(
@@ -107,8 +105,16 @@ export class CityService {
     const searchRadii = [1, 5, 20];
 
     for (const radius of searchRadii) {
-      const nearbyCities = await this.getCitiesInBounds(latitude, longitude, radius);
-      const nearestCity = this.pickNearestCity(nearbyCities, latitude, longitude);
+      const nearbyCities = await this.getCitiesInBounds(
+        latitude,
+        longitude,
+        radius
+      );
+      const nearestCity = this.pickNearestCity(
+        nearbyCities,
+        latitude,
+        longitude
+      );
       if (nearestCity) {
         return nearestCity;
       }
@@ -183,5 +189,30 @@ export class CityService {
     const latDiff = lat1 - lat2;
     const lonDiff = lon1 - lon2;
     return latDiff * latDiff + lonDiff * lonDiff;
+  }
+
+  private toCitySuggestionResponse(city: City): CitySuggestionResponse {
+    return {
+      city_id: city.city_id,
+      city_name: city.city_name,
+      country_name: this.getCountryName(city),
+    };
+  }
+
+  private toCityDetailResponse(city: City): CityDetailResponse {
+    return {
+      ...this.toCitySuggestionResponse(city),
+      latitude: city.latitude,
+      longitude: city.longitude,
+    };
+  }
+
+  private getCountryName(city: City): string {
+    if (!city.country) {
+      throw new NotFoundException(
+        `Country relation is missing for city ${city.city_id}`
+      );
+    }
+    return city.country.country_name;
   }
 }
