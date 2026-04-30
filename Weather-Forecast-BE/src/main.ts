@@ -8,10 +8,9 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1');
-  // const origin
+  const configService = app.get(ConfigService);
   app.enableCors({
-    // origin: 'https://weatherforecast.chaumanh.site',
-    origin: 'http://localhost:5174',
+    origin: configService.get<string>('app.origin') || 'http://localhost:5173',
     credentials: true, // Cho phép gửi cookie
     // methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     // allowedHeaders: ['Content-Type', 'Authorization'],
@@ -21,7 +20,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   // Global exception handler
   app.useGlobalFilters(new AllExceptionsFilter());
-  const configService = app.get(ConfigService);
   const port = configService.getOrThrow<number>('app.port');
   await app.listen(port);
 }
