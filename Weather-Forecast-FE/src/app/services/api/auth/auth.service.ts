@@ -46,12 +46,11 @@ const createUser = async (data: RegisterData) => {
   };
 
   try {
-    await api.post<ApiResponse<unknown>>("/user/create", payload);
+    await api.post<ApiResponse<unknown>>("/user", payload);
   } catch (error: any) {
     if (error?.response?.status !== 404) {
       throw error;
     }
-    await api.post<ApiResponse<unknown>>("/user", payload);
   }
 };
 

@@ -48,13 +48,7 @@ export class SeederService {
       return;
     }
 
-    const filePath = join(
-      process.cwd(),
-      'src',
-      'seeder',
-      'data',
-      'country.csv'
-    );
+    const filePath = join(__dirname, 'data', 'country.csv');
     const file = readFileSync(filePath, 'utf-8').replace(/^\uFEFF/, '');
     console.log(`reading ${filePath}`);
     console.log(`seeding countries...`);
@@ -79,7 +73,7 @@ export class SeederService {
       console.log('Cities already seeded.');
       return;
     }
-    const filePath = join(process.cwd(), 'src', 'seeder', 'data', 'city.csv');
+    const filePath = join(__dirname, 'data', 'city.csv');
     const file = readFileSync(filePath, 'utf-8').replace(/^\uFEFF/, '');
     console.log(`reading ${filePath}`);
     console.log(`seeding cities...`);
@@ -109,13 +103,7 @@ export class SeederService {
       return;
     }
 
-    const filePath = join(
-      process.cwd(),
-      'src',
-      'seeder',
-      'data',
-      'weatherCondition.csv'
-    );
+    const filePath = join(__dirname, 'data', 'weatherCondition.csv');
     const file = readFileSync(filePath, 'utf-8').replace(/^\uFEFF/, '');
     console.log(`reading ${filePath}`);
     console.log(`seeding weather conditions...`);

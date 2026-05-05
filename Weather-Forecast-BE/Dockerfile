@@ -20,6 +20,7 @@ WORKDIR /app
 # Chỉ copy những thứ cần thiết cho production
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/src/seeder/data ./dist/seeder/data
 # COPY --from=builder /app/.env .env
 
 # cập nhật hệ thống và giảm lỗ hổng bảo mật

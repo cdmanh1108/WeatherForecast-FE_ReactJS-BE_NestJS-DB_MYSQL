@@ -21,9 +21,9 @@ export class UserService {
     private readonly cloudinaryService: CloudinaryService,
     private readonly openWeatherService: OpenWeatherService,
     private readonly cityService: CityService
-  ) {}
+  ) { }
 
-  async createUser(dto: CreateUserRequest): Promise<User> {
+  async createUser(dto: CreateUserRequest): Promise<UserProfileResponse> {
     const existing = await this.userRepo.findOneBy({
       username: dto.username,
     });
@@ -37,7 +37,10 @@ export class UserService {
       password: hashed,
       email: `${dto.username}@example.com`, // Mock email because DB requires it but DTO doesn't
     });
-    return this.userRepo.save(user);
+    this.userRepo.save(user);
+
+    const result = mapUserToUserProfileResponse(user);
+    return result;
   }
 
   async findOne(username: string): Promise<User | null> {
